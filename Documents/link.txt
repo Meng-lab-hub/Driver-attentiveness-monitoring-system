@@ -1,0 +1,3 @@
+Yahboom jetson orin nano super sub documentations: https://www.yahboom.net/study/Orin-Nano-SUPER
+
+Nvidia Jetson Orin Nano - SSD & MicroSD Setup Guide: https://www.youtube.com/watch?v=BaRdpSXU6EM

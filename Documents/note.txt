@@ -1,0 +1,10 @@
+9/21/2025:
+
+- First booting on jetson orin nano (from Dr. Min). Connected Display to display port, mouse and keyboard to usb port. Everythings works fine.
+	> The board is from yahboom which is flashed by yahboom variant of operating system by default. need to flash jetpack separately.
+- Tried to attach antenna while orin nano is running cause a screen to go black for a second, the screen is back on. Then the wifi & bluetooth card turned extreamly hot. the keyboard and mouse connected to orin nano no long works. the orin nano still boot up and looks fine on the screen showing yahboom operating system.
+
+encountered issue:
+- inserting antenna while orin nano is on cause some form of short circuit and burned the wifi card and somehow mess with USB bus system. 
+	> correct way to do: 	must turn orin nano off while inserting any connection or dealing with hardware.
+	> solution: 		no much to do. will get a new jetson orin nano development kit tomorrow from Micro Center.

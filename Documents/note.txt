@@ -8,3 +8,33 @@ encountered issue:
 - inserting antenna while orin nano is on cause some form of short circuit and burned the wifi card and somehow mess with USB bus system. 
 	> correct way to do: 	must turn orin nano off while inserting any connection or dealing with hardware.
 	> solution: 		no much to do. will get a new jetson orin nano development kit tomorrow from Micro Center.
+
+
+9/22/2025: 
+
+What happened:
+
+- Got new Jetson orin nano.
+
+Encountered issue when flashing: 
+- follow a video: https://youtu.be/BaRdpSXU6EM?si=EiEW-Ai79cL45F1M. 
+	> when he unplug jumper to exit from recovery mode, you must do so at that time too.
+	> no ip address needed for this version of SDK manager (not sure if there will be problem later).
+
+
+
+- Flashed and install jetpack into ssd using SDK manager (seems to be successful).
+
+
+Encountered issue:
+- after booted up jetpack, chromium and firefox doesn't work.
+	> solution: rollback snap/snapd version and hold for automatic update (holding for old version software is not recommended) need to find better solution
+	> command to solve: $ snap download snapd --revision=24724
+			    $ sudo snap ack snapd_24724.assert
+			    $ sudo snap install snapd_24724.snap
+			    $ sudo sudo snap refresh --hold snapd
+
+	> solution link from nvidia forum: https://forums.developer.nvidia.com/t/neither-chromium-nor-firefox-work-with-my-jetson-orin-nano/338669
+
+
+

@@ -48,3 +48,22 @@ Encountered issue:
 - git clone a jetson-container repository which has a lot of docker image for jetson such as stable diffusion.
 
 
+
+- installed camera into jetson orin nano.
+
+
+- git clone CSI-Camera repo to test the camera.
+	> follow: 
+
+- initially doesn't work. camera is not detected.
+	> solution: use jetson-IO utility and enable IMX477
+		- on terminal run: sudo /opt/nvidia/jetson-io/jetson-io.py
+		- then choose "Configure Jetson 24pin CSI Connector"
+		- then choose "Configure for compatible hardware"
+		= then choose "Camera IMX477-A and IMX219-C"
+		= follow though and reboot.
+
+
+- Camera run at 1080P at 60Hz. has three main mode, day mode, night mode and day mode with IR-Cut unintentionally trigger make live-image more red.
+
+ 

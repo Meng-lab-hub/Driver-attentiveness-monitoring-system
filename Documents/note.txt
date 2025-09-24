@@ -37,4 +37,14 @@ Encountered issue:
 	> solution link from nvidia forum: https://forums.developer.nvidia.com/t/neither-chromium-nor-firefox-work-with-my-jetson-orin-nano/338669
 
 
+9/23/2025:
+
+- installed docker, jtop
+
+- found out that jtop cannot detect jetpack, this raise more suspicious about jetpack installation.
+
+- add current user "orinanao?" into docker group
+
+- git clone a jetson-container repository which has a lot of docker image for jetson such as stable diffusion.
+
 

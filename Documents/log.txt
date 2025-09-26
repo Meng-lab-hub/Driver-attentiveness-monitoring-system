@@ -66,4 +66,9 @@ Encountered issue:
 
 - Camera run at 1080P at 60Hz. has three main mode, day mode, night mode and day mode with IR-Cut unintentionally trigger make live-image more red.
 
- 
+
+9/25/2025:
+
+- create a manual with step in detail, instruciton, encountered issue, and solution on overleaf. Also push this to github repo too. hasn't found a way to fully intgrate it into github repo yet and hasn't found a way to view .tex file as pdf in github yet. 
+
+

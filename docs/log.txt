@@ -1,0 +1,182 @@
+9/21/2025:
+
+- First booting on jetson orin nano (from Dr. Min). Connected Display to display port, mouse and keyboard to usb port. Everythings works fine.
+	> The board is from yahboom which is flashed by yahboom variant of operating system by default. need to flash jetpack separately.
+- Tried to attach antenna while orin nano is running cause a screen to go black for a second, the screen is back on. Then the wifi & bluetooth card turned extreamly hot. the keyboard and mouse connected to orin nano no long works. the orin nano still boot up and looks fine on the screen showing yahboom operating system.
+
+encountered issue:
+- inserting antenna while orin nano is on cause some form of short circuit and burned the wifi card and somehow mess with USB bus system. 
+	> correct way to do: 	must turn orin nano off while inserting any connection or dealing with hardware.
+	> solution: 		no much to do. will get a new jetson orin nano development kit tomorrow from Micro Center.
+
+
+9/22/2025: 
+
+What happened:
+
+- Got new Jetson orin nano.
+
+Encountered issue when flashing: 
+- follow a video: https://youtu.be/BaRdpSXU6EM?si=EiEW-Ai79cL45F1M. 
+	> when he unplug jumper to exit from recovery mode, you must do so at that time too.
+	> no ip address needed for this version of SDK manager (not sure if there will be problem later).
+
+
+
+- Flashed and install jetpack into ssd using SDK manager (seems to be successful).
+
+
+Encountered issue:
+- after booted up jetpack, chromium and firefox doesn't work.
+	> solution: rollback snap/snapd version and hold for automatic update (holding for old version software is not recommended) need to find better solution
+	> command to solve: $ snap download snapd --revision=24724
+			    $ sudo snap ack snapd_24724.assert
+			    $ sudo snap install snapd_24724.snap
+			    $ sudo sudo snap refresh --hold snapd
+
+	> solution link from nvidia forum: https://forums.developer.nvidia.com/t/neither-chromium-nor-firefox-work-with-my-jetson-orin-nano/338669
+
+
+9/23/2025:
+
+- installed docker, jtop
+
+- found out that jtop cannot detect jetpack, this raise more suspicious about jetpack installation.
+
+- add current user "orinanao?" into docker group
+
+- git clone a jetson-container repository which has a lot of docker image for jetson such as stable diffusion.
+
+
+
+- installed camera into jetson orin nano.
+
+
+- git clone CSI-Camera repo to test the camera.
+	> follow: 
+
+- initially doesn't work. camera is not detected.
+	> solution: use jetson-IO utility and enable IMX477
+		- on terminal run: sudo /opt/nvidia/jetson-io/jetson-io.py
+		- then choose "Configure Jetson 24pin CSI Connector"
+		- then choose "Configure for compatible hardware"
+		= then choose "Camera IMX477-A and IMX219-C"
+		= follow though and reboot.
+
+
+- Camera run at 1080P at 60Hz. has three main mode, day mode, night mode and day mode with IR-Cut unintentionally trigger make live-image more red.
+
+
+9/25/2025:
+
+- create a manual with step in detail, instruciton, encountered issue, and solution on overleaf. Also push this to github repo too. hasn't found a way to fully intgrate it into github repo yet and hasn't found a way to view .tex file as pdf in github yet. 
+
+
+
+10/01/2025:
+
+- tried to pull deepstream docker. 
+	> deepstream version must compatible with jetpack version which for nano, jetpack 6.x is latest. 
+	> as of today, jetpack 6.2.2, L4T36.4.4, deepstream-l47 7.0 works.
+
+	> deepstream for jetson is called deepstream-l4t.
+
+
+
+- command to run deepstream docker from nvidia:
+	docker run --runtime nvidia --rm -it   --network host    -v /home/orinnano/DMS/Driver-attentiveness-monitoring-system/deepstream_workspace:/workspace -w /workspace    -v /tmp/.X11-unix:/tmp/.X11-unix    -e DISPLAY=$DISPLAY    nvcr.io/nvidia/deepstream-l4t:7.0-triton-multiarch
+
+
+
+	docker run --runtime nvidia --rm -it \
+   --network host \
+   --device /dev/video0 \
+   --device /dev/nvhost-ctrl \
+   --device /dev/nvhost-ctrl-gpu \
+   --device /dev/nvhost-prof-gpu \
+   --device /dev/nvmap \
+   -v /home/orinnano/DMS/Driver-attentiveness-monitoring-system/deepstream_workspace:/workspace -w /workspace \
+   -v /tmp/.X11-unix:/tmp/.X11-unix \
+   -e DISPLAY=$DISPLAY \
+   nvcr.io/nvidia/deepstream-l4t:7.0-triton-multiarch 
+
+
+- despite we were able to pull a live image from camera at host device, inside a deepstream docker, we cannot pull a live image camera.
+
+- try pulling live image from camera on host device, run command below it shows up a live image from camera: 
+	gst-launch-1.0 nvarguscamerasrc ! nveglglessink
+
+
+- now try pull live image from camera in deepstream, run command below:
+	docker run --runtime nvidia --rm -it \
+   --network host \
+   --device /dev/video0 \
+   -v /home/orinnano/DMS/Driver-attentiveness-monitoring-system/deepstream_workspace:/workspace -w /workspace \
+   -v /tmp/.X11-unix:/tmp/.X11-unix \
+   -e DISPLAY=$DISPLAY \
+   nvcr.io/nvidia/deepstream-l4t:7.0-triton-multiarch
+
+
+	command above should create a deepstream container, command below will try to pull up a live image from camera:
+	gst-launch-1.0 nvarguscamerasrc ! nveglglessink
+
+
+
+	> solution on pulling live image from camera inside docker: need to mount the real socket path so that docker container can connect to Argus. the path is: /tmp/argus_socket.
+
+	> to properly create docker container with mounting argus socket use command below:
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+xhost +si:localuser:root
+
+sudo docker run --runtime nvidia --rm -it --privileged \
+  --network host \
+  --device /dev/video0 \
+  --device /dev/media0 \
+  -v /tmp/argus_socket:/tmp/argus_socket \
+  -v /run/dbus:/run/dbus \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -e DISPLAY=$DISPLAY \
+  nvcr.io/nvidia/deepstream-l4t:7.0-triton-multiarch \
+  gst-launch-1.0 nvarguscamerasrc ! nveglglessink
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+from command above we can extract functionality as below
+
+allow privilage access (just in case, might not necessary):
+	xhost +si:localuser:root
+
+
+create container:
+	docker run --runtime nvidia --rm -it --privileged \
+  --network host \
+  --device /dev/video0 \
+  --device /dev/media0 \
+  -v /tmp/argus_socket:/tmp/argus_socket \
+  -v /run/dbus:/run/dbus \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -e DISPLAY=$DISPLAY \
+  nvcr.io/nvidia/deepstream-l4t:7.0-triton-multiarch
+
+
+
+try pull up camera:
+
+gst-launch-1.0 nvarguscamerasrc ! nveglglessink
+
+
+
+update version of container creation command:
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

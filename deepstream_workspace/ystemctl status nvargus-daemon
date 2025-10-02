@@ -1,0 +1,20 @@
+[0;1;32m●[0m nvargus-daemon.service - Argus daemon
+     Loaded: loaded (/etc/systemd/system/nvargus-daemon.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (running)[0m since Wed 2025-10-01 13:48:28 CST; 10h ago
+   Main PID: 1023 (nvargus-daemon)
+      Tasks: 1 (limit: 8809)
+     Memory: 159.1M
+        CPU: 5.064s
+     CGroup: /system.slice/nvargus-daemon.service
+             └─1023 /usr/sbin/nvargus-daemon
+
+Oct 02 00:23:40 ubuntu nvargus-daemon[1023]: NvPclDriverInitializeData: Unable to initialize driver v4l2_sensor
+Oct 02 00:23:40 ubuntu nvargus-daemon[1023]: NvPclInitializeDrivers: error: Failed to init camera sub module v4l2_sensor
+Oct 02 00:23:40 ubuntu nvargus-daemon[1023]: NvPclStartPlatformDrivers: Failed to start module drivers
+Oct 02 00:23:40 ubuntu nvargus-daemon[1023]: NvPclDriver_V4L2_Focuser_Stub_Close: Invalid NULL input pPclDriver
+Oct 02 00:23:40 ubuntu nvargus-daemon[1023]: NvPclStateControllerOpen: Failed ImagerGUID 0. (error 0xA000E)
+Oct 02 00:23:40 ubuntu nvargus-daemon[1023]: NvPclOpen: PCL Open Failed. Error: 0xf
+Oct 02 00:23:40 ubuntu nvargus-daemon[1023]: SCF: Error BadParameter: Sensor could not be opened. (in src/services/capture/CaptureServiceDeviceSensor.cpp, function getSourceFromGuid(), line 725)
+Oct 02 00:23:40 ubuntu nvargus-daemon[1023]: SCF: Error BadParameter:  (propagating from src/services/capture/CaptureService.cpp, function addSourceByGuid(), line 455)
+Oct 02 00:23:40 ubuntu nvargus-daemon[1023]: SCF: Error BadParameter:  (propagating from src/api/CameraDriver.cpp, function addSourceByIndex(), line 382)
+Oct 02 00:23:40 ubuntu nvargus-daemon[1023]: SCF: Error BadParameter:  (propagating from src/api/CameraDriver.cpp, function getSource(), line 554)

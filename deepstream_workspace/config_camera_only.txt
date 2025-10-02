@@ -3,11 +3,11 @@ enable-perf-measurement=1
 perf-measurement-interval-sec=5
 
 [tiled-display]
-enable=0   # disable tiler, we just want raw video
+enable=0   # disable tiler
 
 [source0]
 enable=1
-type=4
+type=5		# CSI-Camera
 camera-id=0
 camera-width=1920
 camera-height=1080
@@ -22,7 +22,8 @@ batched-push-timeout=40000
 
 [sink0]
 enable=1
-type=3          # EGL sink (nveglglessink)
+type=2          # EGL preview window
 sync=0
+
 
 

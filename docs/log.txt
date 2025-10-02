@@ -177,6 +177,60 @@ update version of container creation command:
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+docker run --runtime nvidia --rm -it \
+  --network host \
+  --device /dev/video0 \
+  --device /dev/media0 \
+  -v /tmp/argus_socket:/tmp/argus_socket \
+  -v /run/dbus:/run/dbus \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -e DISPLAY=$DISPLAY \
+  -v /home/orinnano/DMS/Driver-attentiveness-monitoring-system/deepstream_workspace:/workspace -w /workspace \
+  nvcr.io/nvidia/deepstream-l4t:7.0-triton-multiarch
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+command to run camera:
+
+  deepstream-app -c config_camera_live_image.txt
+
+
+
+
+- despite the correct command as shown above, with the dummy config below it successfully pulled up live image from camera in deepstream. 
+	
+
+	> important: source0: type=5, sink0: type=2. for more detail visit: https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_ref_app_deepstream.html#source-group. go to deepstream reference application - deepstream-app -> configuration groups.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+
+
+[application]
+enable-perf-measurement=1
+perf-measurement-interval-sec=5
+
+[tiled-display]
+enable=0   # disable tiler
+
+[source0]
+enable=1
+type=5			# CSI-Camera
+camera-id=0
+camera-width=1920
+camera-height=1080
+camera-fps-n=30
+camera-fps-d=1
+
+[streammux]
+batch-size=1
+width=1920
+height=1080
+batched-push-timeout=40000
+
+[sink0]
+enable=1
+type=2          # EGL preview window
+sync=0
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

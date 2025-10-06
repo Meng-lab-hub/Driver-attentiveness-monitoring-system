@@ -177,7 +177,7 @@ update version of container creation command:
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-docker run --runtime nvidia --rm -it \
+docker run --gpus all --runtime nvidia --rm -it \
   --network host \
   --device /dev/video0 \
   --device /dev/media0 \
@@ -297,3 +297,20 @@ docker build -t deepstreem:7.0-v1 -f Dockerfile.v1 .
 
 
 - succesfully create docker image using dockerfile and build command above.
+
+
+
+
+10/5/2025
+
+
+tried to pull facedetectir, followed nvidia catalog and russian youtube video.
+
+
+- nvidia catalog nolong provide .etle and config.txt file in deepstream 7.0
+
+- russian guy use deepstream 5.1
+
+	> we can try deepstream5.1 and download appropriate TAO converter version for it to try
+
+	> we can try deepstream 7.0 with .etle and config.txt file from deepstream 5.1

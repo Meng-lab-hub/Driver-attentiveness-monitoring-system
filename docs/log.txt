@@ -447,3 +447,75 @@ CMD ["bash"]
 - follow this youtube video: https://www.youtube.com/watch?v=LF7Lgz4_lus
 
 - the camera config for 24 pin at one point is set back to imx219 again, need to repeat a solution just like before.
+
+
+
+11/12/2025:
+
+
+
+
+= to initialize miniforge3
+	source ~/miniforge3/bin/activate
+
+- use guild from medium, is able to get head pos and eye gaze.
+
+
+
+
+11/24/2025:
+
+
+- try to get camera to works
+  > issue: if we install mediapipe full package like what we did in conda/mediapipe environment, a pip opencv will be installed and it will be used which this version of opencv doesn't support Gstream, etc stuff that jetson use.
+  > solution: use the opencv package that support jetson packaga, which can be installed by 
+    sudo apt install python3-opencv libopencv-dev
+    
+    + conda create -n mp python=3.10
+    + conda activate mp 
+    + sudo apt install python3-opencv
+    + ln -s /usr/lib/python3/dist-packages/cv2 $CONDA_PREFIX/lib/python3.10/site-packages/
+    + pip install mediapipe (this failed)
+
+
+
+    + conda deactivate -> exit (do untill we exit from conda completely, no (base) in front of the terminal)
+    + python3 -c "import cv2; print(cv2.__file__)"
+    + source ~/miniforge3/bin/activate
+    + python3 -c "import cv2; print(cv2.__file__)"
+    + conda activate mp
+    + python3 -c "import cv2; print(cv2.__file__)"  (this will show no module name cv2)
+
+
+    + python3 --version (this should give python 3.10.x   if it give newer version, we need to downgrade)
+    + mkdir -p $CONDA_PREFIX/lib/python3.10/site-packages
+    + ln -s /usr/lib/python3/dist-packages/cv2.cpython-310-aarch64-linux-gnu.so $CONDA_PREFIX/lib/python3.10/site-packages/cv2.so
+    + ln -s /usr/lib/python3/dist-packages/cv2 $CONDA_PREFIX/lib/python3.10/site-packages/cv2   (this doesn't work but seem to be optional)
+
+    > now in mp environment, a command below should give output like /home/orinnano/miniforge3/envs/mp/lib/python3.10/site-packages/cv2.so
+      + python3 -c "import cv2; print(cv2.__file__)"
+
+
+    > now a command below should give "True"
+      + python3 -c "import cv2; print('GStreamer' in cv2.getBuildInformation())"
+
+    > simple_camera.py should work in this environment.
+
+  > now  we have mp environment that camera works but this environment failed to install mediapipe earlier.
+    > issue: because no opencv from pip installed?
+    > solution: install mediapipe with no dependence and install dependence manually.
+    
+      + pip install mediapipe=0.10.18 --no-deps
+      + pip install absl-py attrs protobuf flatbuffers sounddevice (it will show and error with dependence that is not install but keep continue)
+
+      now try 
+        > python3 -c "import mediapipe as mp; print(mp.__version__)"
+            if it shows 0.10.18 then it is good to go. if it shows "No module nhamed 'matplotlib' then proceed command below
+
+      > pip install matplotlib==3.5.3
+
+      now try 
+        > python3 -c "import mediapipe as mp; print(mp.__version__)"   (now it should shows 0.10.18)
+
+
+  > now mp environment should be ready to run gaze_v5_camera.py succesfully  
